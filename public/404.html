@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Download</title>
+</head>
+<body>
+    <h1>Image Upload and Download</h1>
+
+    <!-- File Upload Form -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Select an image to upload:</label>
+        <input type="file" name="file" id="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- List of Uploaded Images -->
+    <h2>Uploaded Images:</h2>
+    <ul id="imageList">
+        <!-- Images will be listed here dynamically -->
+    </ul>
+
+    <script>
+        // Fetch the list of uploaded images from the server and display them
+        fetch('/list-images')
+            .then(response => response.json())
+            .then(data => {
+                const imageList = document.getElementById('imageList');
+                imageList.innerHTML = '';
+                data.images.forEach(filename => {
+                    const listItem = document.createElement('li');
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = `/download/${filename}`;
+                    downloadLink.textContent = filename;
+                    listItem.appendChild(downloadLink);
+                    imageList.appendChild(listItem);
+                });
+            });
+    </script>
+</body>
+</html>
